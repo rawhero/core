@@ -1,7 +1,7 @@
 import Foundation
 import Archivable
 
-public struct Bookmark: Storable, Identifiable {
+public struct Bookmark: Storable, Equatable, Identifiable {
     public let id: String
     private let bookmark: Data
     
