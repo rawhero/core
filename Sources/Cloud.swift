@@ -2,7 +2,7 @@ import Foundation
 import Archivable
 
 extension Cloud where Output == Archive {
-    public func load() {
+    nonisolated public func load() {
         Task {
             await load("iCloud.rawhero")
         }
