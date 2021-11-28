@@ -6,7 +6,7 @@ final class CloudTests: XCTestCase {
     private var cloud: Cloud<Archive>!
     
     override func setUp() {
-        cloud = .ephemeral
+        cloud = .init()
     }
     
     func testBookmarks() async {

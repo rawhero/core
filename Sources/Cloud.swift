@@ -2,6 +2,12 @@ import Foundation
 import Archivable
 
 extension Cloud where Output == Archive {
+    public func load() {
+        Task {
+            await load("iCloud.rawhero")
+        }
+    }
+    
     public var current: (bookmark: Bookmark, url: URL) {
         get throws {
             guard let current = model.current else { throw CoreError.noCurrent }
