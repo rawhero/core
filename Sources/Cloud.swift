@@ -11,7 +11,7 @@ extension Cloud where Output == Archive {
     public var current: (bookmark: Bookmark, url: URL) {
         get throws {
             guard let current = model.current else { throw CoreError.noCurrent }
-            return (bookmark: current, url: try open(bookmark: current))
+            return (bookmark: current, url: try access(bookmark: current))
         }
     }
     
@@ -24,19 +24,19 @@ extension Cloud where Output == Archive {
                 await self.stream()
             }
         
-        return (bookmark: bookmark, url: try open(bookmark: bookmark))
+        return (bookmark: bookmark, url: try access(bookmark: bookmark))
     }
     
     public func open(bookmark: Bookmark) throws -> URL {
-        do {
-            return try bookmark.url
-        } catch let error {
-            Task
-                .detached(priority: .utility) {
-                    await self.remove(bookmark: bookmark)
-                }
-            throw error
-        }
+        let url = try access(bookmark: bookmark)
+        model.current = bookmark
+        
+        Task
+            .detached(priority: .utility) {
+                await self.stream()
+            }
+        
+        return url
     }
     
     public func close(bookmark: Bookmark, url: URL) {
@@ -58,6 +58,18 @@ extension Cloud where Output == Archive {
             }
         
         model.current = bookmark
+    }
+    
+    private func access(bookmark: Bookmark) throws -> URL {
+        do {
+            return try bookmark.url
+        } catch let error {
+            Task
+                .detached(priority: .utility) {
+                    await self.remove(bookmark: bookmark)
+                }
+            throw error
+        }
     }
     
     private func remove(bookmark: Bookmark) async {
