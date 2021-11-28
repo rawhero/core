@@ -7,7 +7,6 @@ final class CloudTests: XCTestCase {
     
     override func setUp() {
         cloud = .ephemeral
-        subs = []
     }
     
     func testBookmarks() async {

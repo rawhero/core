@@ -9,7 +9,7 @@ extension Cloud where Output == Archive {
         }
     }
     
-    public func bookmark(url: URL) throws -> Bookmark {
+    public func bookmark(url: URL) throws -> (bookmark: Bookmark, url: URL) {
         let bookmark = try Bookmark(url: url)
         add(bookmark: bookmark)
         
@@ -18,7 +18,7 @@ extension Cloud where Output == Archive {
                 await self.stream()
             }
         
-        return bookmark
+        return (bookmark: bookmark, url: try open(bookmark: bookmark))
     }
     
     public func open(bookmark: Bookmark) throws -> URL {
