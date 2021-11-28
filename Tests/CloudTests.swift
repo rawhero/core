@@ -1,11 +1,9 @@
 import XCTest
-import Combine
 import Archivable
 @testable import Core
 
 final class CloudTests: XCTestCase {
     private var cloud: Cloud<Archive>!
-    private var subs: Set<AnyCancellable>!
     
     override func setUp() {
         cloud = .ephemeral
