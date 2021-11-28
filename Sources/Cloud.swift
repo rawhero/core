@@ -3,26 +3,32 @@ import Archivable
 
 extension Cloud where Output == Archive {
     public var current: (bookmark: Bookmark, url: URL) {
-        get async throws {
+        get throws {
             guard let current = model.current else { throw CoreError.noCurrent }
-            return (bookmark: current, url: try await open(bookmark: current))
+            return (bookmark: current, url: try open(bookmark: current))
         }
     }
     
-    public func bookmark(url: URL) async throws -> (bookmark: Bookmark, url: URL) {
+    public func bookmark(url: URL) throws -> (bookmark: Bookmark, url: URL) {
         let bookmark = try Bookmark(url: url)
         add(bookmark: bookmark)
         
-        await self.stream()
+        Task
+            .detached(priority: .utility) {
+                await self.stream()
+            }
         
-        return await (bookmark: bookmark, url: try open(bookmark: bookmark))
+        return (bookmark: bookmark, url: try open(bookmark: bookmark))
     }
     
-    public func open(bookmark: Bookmark) async throws -> URL {
+    public func open(bookmark: Bookmark) throws -> URL {
         do {
             return try bookmark.url
         } catch let error {
-            await self.remove(bookmark: bookmark)
+            Task
+                .detached(priority: .utility) {
+                    await self.remove(bookmark: bookmark)
+                }
             throw error
         }
     }
