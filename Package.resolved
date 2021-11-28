@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Archivable",
+        "repositoryURL": "https://github.com/archivable/package.git",
+        "state": {
+          "branch": "main",
+          "revision": "3cf9979b909d8e04afbbf412d895872b5f759737",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
