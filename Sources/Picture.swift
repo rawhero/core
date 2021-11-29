@@ -12,7 +12,9 @@ public struct Picture: Hashable, Identifiable {
     init?(item: Any) {
         guard
             let id = item as? URL,
-            let resources = try? id.resourceValues(forKeys: [.contentTypeKey]),
+            let resources = try? id.resourceValues(forKeys: [.contentTypeKey,
+                                                             .creationDateKey,
+                                                             .fileSizeKey]),
             let type = resources.contentType,
             type.conforms(to: .image),
             let source = CGImageSourceCreateWithURL(id as CFURL, [kCGImageSourceShouldCache : false] as CFDictionary),
