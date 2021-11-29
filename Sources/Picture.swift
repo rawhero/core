@@ -9,6 +9,12 @@ public struct Picture: Hashable, Identifiable {
     public let bytes: Int
     public let date: Date
     
+    private static let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
+        return formatter
+    } ()
+    
     init?(item: Any) {
         guard
             let id = item as? URL,
@@ -18,16 +24,15 @@ public struct Picture: Hashable, Identifiable {
             let type = resources.contentType,
             type.conforms(to: .image),
             let source = CGImageSourceCreateWithURL(id as CFURL, [kCGImageSourceShouldCache : false] as CFDictionary),
-            let dictionary = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [String : AnyObject],
-            let width = dictionary["PixelWidth"] as? Int,
-            let height = dictionary["PixelHeight"] as? Int
+            let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [String : AnyObject]
         else { return nil }
         
-        let exif = dictionary["{Exif}"] as? [String : AnyObject]
+        let exif = properties["{Exif}"] as? [String : AnyObject]
+        let tiff = properties["{TIFF}"] as? [String : AnyObject]
         
         date = (exif?["DateTimeOriginal"] as? String)
             .flatMap {
-                let a = ISO8601DateFormatter().date(from: $0)
+                let a = Self.formatter.date(from: $0)
                 print("date : \(a)")
                 return a
             }
@@ -38,8 +43,15 @@ public struct Picture: Hashable, Identifiable {
             .flatMap(Speed.iso)
         ?? .unknown
         
+        size = .init(width: (properties["PixelWidth"] as? Int)
+                     ?? tiff?["Width"] as? Int
+                     ?? 0,
+                     height: (properties["PixelHeight"] as? Int)
+                     ?? tiff?["Height"] as? Int
+                     ?? 0)
+        
         bytes = resources.fileSize ?? 0
-        size = .init(width: width, height: height)
+        
         self.id = id
     }
     
