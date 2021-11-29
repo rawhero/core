@@ -31,11 +31,7 @@ public struct Picture: Hashable, Identifiable {
         let tiff = properties["{TIFF}"] as? [String : AnyObject]
         
         date = (exif?["DateTimeOriginal"] as? String)
-            .flatMap {
-                let a = Self.formatter.date(from: $0)
-                print("date : \(a)")
-                return a
-            }
+            .flatMap(Self.formatter.date(from:))
         ?? resources.creationDate
         ?? .now
         
