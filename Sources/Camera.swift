@@ -14,7 +14,7 @@ public final actor Camera {
         self.strategy = strategy
     }
     
-    public func publisher(for url: URL, size: Picture.Size) -> Pub? {
+    public func publisher(for url: URL, size: Picture.Size) -> Pub {
         if publishers[url.absoluteString] == nil {
             publishers[url.absoluteString] = .init(url: url, size: strategy.size(for: size))
         }
