@@ -16,21 +16,9 @@ public final actor Camera {
     
     public func publisher(for url: URL, size: Picture.Size) -> Pub? {
         if publishers[url.absoluteString] == nil {
-            publishers[url.absoluteString] = .init()
+            publishers[url.absoluteString] = .init(url: url, size: strategy.size(for: size))
         }
-        
-        let publisher = publishers[url.absoluteString]!
-        let size = strategy.size(for: size)
-        
-        Task
-            .detached(priority: .utility) {
-                if await publisher.output == nil {
-                    guard let output = CGImage.render(url: url, size: size) else { return }
-                    await publisher.received(output: output)
-                }
-            }
-        
-        return publisher
+        return publishers[url.absoluteString]!
     }
 }
 
@@ -45,11 +33,12 @@ extension Camera {
         public typealias Failure = Never
         fileprivate private(set) var output: Output?
         private var contracts = [Contract]()
+        private let url: URL
+        private let size: CGFloat
         
-        fileprivate func received(output: Output) async {
-            self.output = output
-            await clean()
-            await send(contracts: contracts, output: output)
+        init(url: URL, size: CGFloat) {
+            self.url = url
+            self.size = size
         }
         
         public nonisolated func receive<S>(subscriber: S) where S : Subscriber, Failure == S.Failure, Output == S.Input {
@@ -63,6 +52,16 @@ extension Camera {
                 
                 if let output = await output {
                     await sub.send(output: output)
+                } else {
+                    let url = self.url
+                    let size = self.size
+                    
+                    Task
+                        .detached(priority: .utility) { [weak self] in
+                            guard let output = CGImage.render(url: url, size: size) else { return }
+                            await self?.received(output: output)
+                            await sub.send(output: output)
+                        }
                 }
             }
         }
@@ -72,10 +71,8 @@ extension Camera {
             await clean()
         }
         
-        private func send(contracts: [Contract], output: Output) async {
-            for contract in contracts {
-                await contract.sub?.send(output: output)
-            }
+        private func received(output: Output) async {
+            self.output = output
         }
         
         private func clean() async {
