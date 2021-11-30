@@ -29,6 +29,9 @@ public struct Picture: Hashable, Identifiable {
         
         let exif = properties["{Exif}"] as? [String : AnyObject]
         let tiff = properties["{TIFF}"] as? [String : AnyObject]
+        let rotated = ((properties["Orientation"] as? Int)
+        ?? tiff?["Orientation"] as? Int
+        ?? 1) > 4
         
         date = (exif?["DateTimeOriginal"] as? String)
             .flatMap(Self.formatter.date(from:))
@@ -39,7 +42,8 @@ public struct Picture: Hashable, Identifiable {
             .flatMap(Speed.iso)
         ?? .unknown
         
-        size = .init(width: (properties["PixelWidth"] as? Int)
+        size = .init(rotated: rotated,
+                     width: (properties["PixelWidth"] as? Int)
                      ?? tiff?["Width"] as? Int
                      ?? 0,
                      height: (properties["PixelHeight"] as? Int)
