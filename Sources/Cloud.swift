@@ -23,7 +23,7 @@ extension Cloud where Output == Archive {
     
     public func open(bookmark: Bookmark) throws -> URL {
         let url = try access(bookmark: bookmark)
-        model.current = bookmark
+        add(bookmark: bookmark)
         
         Task
             .detached(priority: .utility) {
