@@ -14,11 +14,11 @@ public final actor Camera {
         self.strategy = strategy
     }
     
-    public func publisher(for url: URL, size: Picture.Size) -> Pub {
-        if publishers[url.absoluteString] == nil {
-            publishers[url.absoluteString] = .init(url: url, size: strategy.size(for: size))
+    public func publisher(for picture: Picture) -> Pub {
+        if publishers[picture.id.absoluteString] == nil {
+            publishers[picture.id.absoluteString] = .init(url: picture.id, size: strategy.size(for: picture.size))
         }
-        return publishers[url.absoluteString]!
+        return publishers[picture.id.absoluteString]!
     }
 }
 
