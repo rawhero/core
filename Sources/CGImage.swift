@@ -6,7 +6,8 @@ extension CGImage {
         CGImageSourceCreateThumbnailAtIndex(
             CGImageSourceCreateWithURL(url as CFURL,
                                        [kCGImageSourceShouldCache : false] as CFDictionary)!, 0,
-                                            [kCGImageSourceCreateThumbnailFromImageAlways : true,
-                                             kCGImageSourceThumbnailMaxPixelSize : size] as CFDictionary)
+            [kCGImageSourceCreateThumbnailFromImageAlways : true,
+                      kCGImageSourceThumbnailMaxPixelSize : size,
+               kCGImageSourceCreateThumbnailWithTransform : true] as CFDictionary)
     }
 }
