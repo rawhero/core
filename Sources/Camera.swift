@@ -56,13 +56,19 @@ extension Camera {
                     let url = self.url
                     let size = self.size
                     
-                    Task
-                        .detached(priority: .utility) { [weak self] in
+                    Self
+                        .queues
+                        .randomElement()!
+                        .async {
                             let output = CGImage.render(url: url, size: size)
                                 .map(Product.image)
                             ?? .error(.notRenderable)
-                            await self?.received(output: output)
-                            await sub.send(output: output)
+                            
+                            Task
+                                .detached(priority: .utility) { [weak self] in
+                                    await self?.received(output: output)
+                                    await sub.send(output: output)
+                                }
                         }
                 }
             }
