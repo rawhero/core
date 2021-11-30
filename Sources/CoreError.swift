@@ -4,5 +4,6 @@ public enum CoreError: Error {
     case
     noCurrent,
     noAccess,
-    notFound
+    notFound,
+    notRenderable
 }

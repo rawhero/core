@@ -29,7 +29,7 @@ extension Camera {
             Swift.print("publisher gone")
         }
         
-        public typealias Output = CGImage
+        public typealias Output = Product
         public typealias Failure = Never
         fileprivate private(set) var output: Output?
         private var contracts = [Contract]()
@@ -58,7 +58,9 @@ extension Camera {
                     
                     Task
                         .detached(priority: .utility) { [weak self] in
-                            guard let output = CGImage.render(url: url, size: size) else { return }
+                            let output = CGImage.render(url: url, size: size)
+                                .map(Product.image)
+                            ?? .error(.notRenderable)
                             await self?.received(output: output)
                             await sub.send(output: output)
                         }
