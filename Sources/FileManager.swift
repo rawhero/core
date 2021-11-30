@@ -9,7 +9,8 @@ extension FileManager {
                    options: [
                     .producesRelativePathURLs,
                     .skipsHiddenFiles,
-                    .skipsPackageDescendants])
+                    .skipsPackageDescendants,
+                    .skipsSubdirectoryDescendants])
             .map {
                 .init($0.compactMap(Picture.init(item:)))
             }
