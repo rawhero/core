@@ -11,7 +11,7 @@ extension Camera {
             case .hd:
                 return .init(min(1024, min(image.width, image.height)))
             case .thumbnail:
-                return 100
+                return 128
             }
         }
     }
