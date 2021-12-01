@@ -39,7 +39,11 @@ public struct Picture: Hashable, Identifiable {
         ?? .now
         
         speed = (exif?["ISOSpeedRatings"] as? [Int])
-            .flatMap(Speed.iso)
+            .flatMap {
+                $0
+                    .min()
+                    .map(Speed.iso)
+            }
         ?? .unknown
         
         size = .init(rotated: rotated,
