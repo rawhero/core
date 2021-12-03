@@ -44,6 +44,8 @@ public struct Picture: Hashable, Identifiable {
                     .min()
                     .map(Speed.iso)
             }
+        ?? (exif?["ISOSpeed"] as? Int)
+            .map(Speed.iso)
         ?? .unknown
         
         size = .init(rotated: rotated,
