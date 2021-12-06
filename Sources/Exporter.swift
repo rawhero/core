@@ -25,7 +25,7 @@ public struct Exporter {
             scale = max(2 / Double(size.width), 2 / Double(size.height))
             return
         }
-        scale = with
+        scale = min(with, 1)
     }
     
     mutating public func scale(with: String) {
