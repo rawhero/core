@@ -16,7 +16,7 @@ public struct Exporter {
         self.size = size
     }
     
-    mutating func scale(with: Double) {
+    mutating public func scale(with: Double) {
         guard
             with >= 0.01,
             .init(size.width) * with >= 2,
@@ -26,6 +26,13 @@ public struct Exporter {
             return
         }
         scale = with
+    }
+    
+    mutating public func scale(with: String) {
+        Double(with)
+            .map {
+                scale(with: $0)
+            }
     }
     
     mutating public func width(with: String) {

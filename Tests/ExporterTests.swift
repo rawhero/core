@@ -15,6 +15,11 @@ final class ExporterTests: XCTestCase {
         
         XCTAssertEqual(200, exporter.width)
         XCTAssertEqual(100, exporter.height)
+        
+        exporter.scale(with: "0.25")
+        
+        XCTAssertEqual(100, exporter.width)
+        XCTAssertEqual(50, exporter.height)
     }
     
     func testWidth() {
