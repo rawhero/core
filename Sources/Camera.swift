@@ -2,11 +2,6 @@ import Foundation
 import Combine
 
 public final actor Camera {
-    
-    deinit {
-        Swift.print("camera gone")
-    }
-    
     private var publishers = [String : Pub]()
     private let strategy: Strategy
     
@@ -24,11 +19,6 @@ public final actor Camera {
 
 extension Camera {
     public final actor Pub: Publisher {
-        
-        deinit {
-            Swift.print("publisher gone")
-        }
-        
         public typealias Output = Product
         public typealias Failure = Never
         fileprivate private(set) var output: Output?
