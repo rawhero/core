@@ -8,23 +8,21 @@ extension CGImage {
             let image = render(
                 url: url,
                 size: .init(max(exporter.width, exporter.height)),
-                quality: exporter.quality,
                 alpha: exporter.mode == .png),
             let destination = CGImageDestinationCreateWithData(data as CFMutableData, exporter.mode.type, 1, nil)
         else { return nil }
-        CGImageDestinationAddImage(destination, image, nil)
+        CGImageDestinationAddImage(destination, image, [kCGImageDestinationLossyCompressionQuality : exporter.quality] as CFDictionary)
         CGImageDestinationFinalize(destination)
         return data as Data
     }
     
-    static func render(url: URL, size: CGFloat, quality: Double, alpha: Bool) -> CGImage? {
+    static func render(url: URL, size: CGFloat, alpha: Bool) -> CGImage? {
         CGImageSourceCreateThumbnailAtIndex(
             CGImageSourceCreateWithURL(url as CFURL,
                                        [kCGImageSourceShouldCache : false] as CFDictionary)!, 0,
             [kCGImageSourceCreateThumbnailFromImageAlways : true,
                       kCGImageSourceThumbnailMaxPixelSize : size,
                kCGImageSourceCreateThumbnailWithTransform : true,
-                                 kCGImagePropertyHasAlpha : alpha,
-               kCGImageDestinationLossyCompressionQuality : quality] as CFDictionary)
+                                 kCGImagePropertyHasAlpha : alpha] as CFDictionary)
     }
 }
