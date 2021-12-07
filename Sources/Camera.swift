@@ -50,7 +50,7 @@ extension Camera {
                         .queues
                         .randomElement()!
                         .async {
-                            let output = CGImage.render(url: url, size: size)
+                            let output = CGImage.render(url: url, size: size, quality: 1, alpha: false)
                                 .map(Product.image)
                             ?? .error(.notRenderable)
                             

@@ -94,4 +94,14 @@ final class ExporterTests: XCTestCase {
         XCTAssertEqual(2, exporter.width)
         XCTAssertEqual(2, exporter.height)
     }
+    
+    func testQuality() {
+        var exporter = Exporter(size: .init(rotated: false, width: 20, height: 20))
+        exporter.quality(with: 0.001)
+        XCTAssertEqual(0.01, exporter.quality)
+        exporter.quality(with: 5)
+        XCTAssertEqual(1, exporter.quality)
+        exporter.quality(with: -1)
+        XCTAssertEqual(0.01, exporter.quality)
+    }
 }

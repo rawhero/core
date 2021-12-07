@@ -3,6 +3,7 @@ import Foundation
 public struct Exporter {
     public var mode = Mode.jpg
     public private(set) var scale = Double(1)
+    public private(set) var quality = Double(1)
     private let size: Picture.Size
     
     public var width: Int {
@@ -27,6 +28,10 @@ public struct Exporter {
             return
         }
         scale = min(with, 1)
+    }
+    
+    mutating public func quality(with: Double) {
+        quality = max(min(with, 1), 0.01)
     }
     
     mutating public func scale(with: String) {

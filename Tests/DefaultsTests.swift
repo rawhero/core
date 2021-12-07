@@ -21,26 +21,26 @@ final class DefaultsTests: XCTestCase {
     }
     
     func testRate() {
-        UserDefaults.standard.setValue(Calendar.current.date(byAdding: .day, value: -6, to: .now)!, forKey: Defaults.created.rawValue)
+        UserDefaults.standard.setValue(Calendar.current.date(byAdding: .day, value: -4, to: .now)!, forKey: Defaults.created.rawValue)
         XCTAssertEqual(.none, Defaults.action)
         XCTAssertFalse(Defaults.hasRated)
-        UserDefaults.standard.setValue(Calendar.current.date(byAdding: .day, value: -7, to: .now)!, forKey: Defaults.created.rawValue)
+        UserDefaults.standard.setValue(Calendar.current.date(byAdding: .day, value: -5, to: .now)!, forKey: Defaults.created.rawValue)
         XCTAssertEqual(.rate, Defaults.action)
         XCTAssertTrue(Defaults.hasRated)
         XCTAssertEqual(.none, Defaults.action)
     }
     
     func testFroob() {
-        UserDefaults.standard.setValue(Calendar.current.date(byAdding: .day, value: -8, to: .now)!, forKey: Defaults.created.rawValue)
+        UserDefaults.standard.setValue(Calendar.current.date(byAdding: .day, value: -5, to: .now)!, forKey: Defaults.created.rawValue)
         UserDefaults.standard.setValue(true, forKey: Defaults.rated.rawValue)
         XCTAssertEqual(.none, Defaults.action)
-        UserDefaults.standard.setValue(Calendar.current.date(byAdding: .day, value: -9, to: .now)!, forKey: Defaults.created.rawValue)
+        UserDefaults.standard.setValue(Calendar.current.date(byAdding: .day, value: -6, to: .now)!, forKey: Defaults.created.rawValue)
         XCTAssertEqual(.froob, Defaults.action)
         XCTAssertEqual(.froob, Defaults.action)
     }
     
     func testPremium() {
-        UserDefaults.standard.setValue(Calendar.current.date(byAdding: .day, value: -9, to: .now)!, forKey: Defaults.created.rawValue)
+        UserDefaults.standard.setValue(Calendar.current.date(byAdding: .day, value: -6, to: .now)!, forKey: Defaults.created.rawValue)
         UserDefaults.standard.setValue(true, forKey: Defaults.premium.rawValue)
         XCTAssertEqual(.rate, Defaults.action)
     }
