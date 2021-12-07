@@ -1,13 +1,12 @@
 import Foundation
 import ImageIO
-import UniformTypeIdentifiers
 
 extension CGImage {
     public static func generate(url: URL, exporter: Exporter) -> Data? {
         let data = NSMutableData()
         guard
             let image = render(url: url, size: .init(max(exporter.width, exporter.height))),
-            let destination = CGImageDestinationCreateWithData(data as CFMutableData, UTType.jpeg.identifier as CFString, 1, nil)
+            let destination = CGImageDestinationCreateWithData(data as CFMutableData, exporter.mode.type, 1, nil)
         else { return nil }
         CGImageDestinationAddImage(destination, image, nil)
         CGImageDestinationFinalize(destination)
