@@ -1,6 +1,7 @@
 import Foundation
 
 public struct Exporter {
+    public var mode = Mode.jpg
     public private(set) var scale = Double(1)
     private let size: Picture.Size
     
