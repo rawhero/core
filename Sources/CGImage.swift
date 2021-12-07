@@ -19,6 +19,7 @@ extension CGImage {
                                        [kCGImageSourceShouldCache : false] as CFDictionary)!, 0,
             [kCGImageSourceCreateThumbnailFromImageAlways : true,
                       kCGImageSourceThumbnailMaxPixelSize : size,
-               kCGImageSourceCreateThumbnailWithTransform : true] as CFDictionary)
+               kCGImageSourceCreateThumbnailWithTransform : true,
+                                 kCGImagePropertyHasAlpha : true] as CFDictionary)
     }
 }
