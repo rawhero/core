@@ -23,4 +23,13 @@ final class CloudTests: XCTestCase {
         count = await cloud.model.bookmarks.count
         XCTAssertEqual(1, count)
     }
+    
+    func testClear() async {
+        let bookmark = Bookmark(dummy: "hello")
+        await cloud.add(bookmark: bookmark)
+        await cloud.clear()
+        
+        let empty = await cloud.model.bookmarks.isEmpty
+        XCTAssertTrue(empty)
+    }
 }

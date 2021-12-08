@@ -9,6 +9,14 @@ extension Cloud where Output == Archive {
         }
     }
     
+    public func clear() {
+        model.bookmarks = []
+        Task
+            .detached(priority: .utility) {
+                await self.stream()
+            }
+    }
+    
     public func bookmark(url: URL) throws -> (bookmark: Bookmark, url: URL) {
         let bookmark = try Bookmark(url: url)
         add(bookmark: bookmark)
